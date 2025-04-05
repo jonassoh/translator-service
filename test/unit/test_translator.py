@@ -193,8 +193,7 @@ def test_llm_unexpected_response():
     def test_response_not_require_translation(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = "The post contains a symbol and does not require translation."
-
-        # TODO assert the expected behavior
+        
         assert translate_content("1+1") == (False, "The post contains a symbol and does not require translation.")
         assert translate_content("λ") == (False, "The post contains a symbol and does not require translation.")
         assert translate_content("??") == (False, "The post contains a symbol and does not require translation.")
@@ -204,8 +203,7 @@ def test_llm_unexpected_response():
     def test_response_malformed(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = "the post is malformed"
-
-        # TODO assert the expected behavior
+        
         assert translate_content("ㄱㅅ") == (False, "the post is malformed")
         assert translate_content(":D") == (False, "the post is malformed")
         assert translate_content("ㅇㅇ") == (False, "the post is malformed")
@@ -215,16 +213,14 @@ def test_llm_unexpected_response():
     def test_response_fails_translation(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = "Это очень интересный проект."
-
-        # TODO assert the expected behavior
+        
         assert translate_content("Это очень интересный проект.") == (False, "Это очень интересный проект.")
 
     @patch.object(client.chat.completions, 'create')
     def test_response_empty(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = ""
-
-        # TODO assert the expected behavior
+        
         assert translate_content("") == (False, "")
         assert translate_content(":D") == (False, ":D")
         assert translate_content("Hier ist dein erstes Beispiel.") == (False, "Hier ist dein erstes Beispiel.")
@@ -233,16 +229,14 @@ def test_llm_unexpected_response():
     def test_response_request_more_info(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = "The post appears to be a single Greek letter, 'Σ' (Sigma), which has no full context to translate. If you have more text or a specific request, please provide it!"
-
-        # TODO assert the expected behavior
+        
         assert translate_content("Σ") == (False, "The post appears to be a single Greek letter, 'Σ' (Sigma), which has no full context to translate. If you have more text or a specific request, please provide it!")
 
     @patch.object(client.chat.completions, 'create')
     def test_unexpected_language(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = "I don't understand"
-
-        # TODO assert the expected behavior
+        
         assert translate_content("ㅇㅅㅇ") == (False, "I don't understand")
 
     @patch.object(client.chat.completions, 'create')
@@ -250,7 +244,6 @@ def test_llm_unexpected_response():
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = "I am not permitted to translate this statement"
 
-        # TODO assert the expected behavior
         assert translate_content("some super innappropriate text") == (False, "I am not permitted to translate this statement")
         assert translate_content("something that would trigger the ccp") == (False, "I am not permitted to translate this statement")
 
@@ -258,8 +251,7 @@ def test_llm_unexpected_response():
     def test_response_is_none(mocker):
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = None
-
-        # TODO assert the expected behavior
+        
         assert translate_content("text that turned into None") == (False, "text that turned into None")
 
     @patch.object(client.chat.completions, 'create')
@@ -267,29 +259,24 @@ def test_llm_unexpected_response():
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = 123
 
-        # TODO assert the expected behavior
         assert translate_content("stays a string") == (False, "stays a string")
 
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = True
-
-        # TODO assert the expected behavior
+        
         assert translate_content("stays a string") == (False, "stays a string")
 
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = 1.2
-
-        # TODO assert the expected behavior
+        
         assert translate_content("stays a string") == (False, "stays a string")
 
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = []
 
-        # TODO assert the expected behavior
         assert translate_content("stays a string") == (False, "stays a string")
 
         # we mock the model's response to return a random message
         mocker.return_value.choices[0].message.content = {}
-
-        # TODO assert the expected behavior
+        
         assert translate_content("stays a string") == (False, "stays a string")
