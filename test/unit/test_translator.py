@@ -7,10 +7,10 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 from typing import Callable
 from mock import patch
 
-OPEN_API_KEY = os.environ.get(${{ secrets.API_KEY }})
+# OPENAI_API_KEY = os.environ.get("${{ secrets.OPENAI_API_KEY }}")
 
 client = openai.OpenAI(
-    api_key = OPEN_API_KEY
+    api_key = OPENAI_API_KEY
 )
 
 normal_eval_set = [
