@@ -3,7 +3,7 @@ import os
 from sentence_transformers import SentenceTransformer, util
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# OPENAI_API_KEY = os.environ.get("${{ secrets.OPENAI_API_KEY }}")
+OPENAI_API_KEY = os.environ.get("${{ secrets.OPENAI_API_KEY }}")
 
 client = openai.OpenAI(
     api_key = OPENAI_API_KEY
@@ -52,7 +52,7 @@ def translate_content(post: str) -> tuple[bool, str]:
     english = False
 
     if get_language(post) == "English":
-        english = False
+        english = True
         translation = post
     else:
         # Ensure translation defaults to original post if get_translation fails
@@ -66,8 +66,9 @@ def translate_content(post: str) -> tuple[bool, str]:
         messages=[
             {
                 "role": "system",
-                "content": '''You are checking that the translation of a post is correctly translated.
-                          If the translation input states along the lines of `does not require translation` or `malformed`, respond with `failed translate`.
+                "content": ''' Your job is to determine if the translation provided is valid or not.
+                If the input states along the lines of `does not require translation` or `malformed`, respond with `failed translate`.
+                Otherwise, return the input as is.
                 '''
             },
             {

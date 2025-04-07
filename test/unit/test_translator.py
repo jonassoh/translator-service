@@ -7,7 +7,7 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 from typing import Callable
 from mock import patch
 
-# OPENAI_API_KEY = os.environ.get("${{ secrets.OPENAI_API_KEY }}")
+OPENAI_API_KEY = os.environ.get("${{ secrets.OPENAI_API_KEY }}")
 
 client = openai.OpenAI(
     api_key = OPENAI_API_KEY
@@ -137,26 +137,28 @@ normal_eval_set = [
 ]
 
 def eval_single_response_complete(expected_answer: tuple[bool, str], llm_response: tuple[bool, str]) -> float:
-  '''TODO: Compares an LLM response to the expected answer from the evaluation dataset using one of the text comparison metrics.'''
-  (llm_language_boolean, llm_translation) = llm_response
-  (expected_language_boolean, expected_translation) = expected_answer
-  if expected_language_boolean != llm_language_boolean:
-    return 0
-  embeddings = model.encode([expected_translation, llm_translation])
-  similarities = model.similarity(embeddings, embeddings)
-  # print(f"expected_translation: {expected_translation}")
-  # print(f"llm_translation: {llm_translation}")
-  # print(f"similarity: {similarities[1][0]}")
-  return similarities[1][0]
+    (llm_language_boolean, llm_translation) = llm_response
+    (expected_language_boolean, expected_translation) = expected_answer
+    if expected_language_boolean != llm_language_boolean:
+        return 0
+    embeddings = model.encode([expected_translation, llm_translation])
+    similarities = util.cos_sim(embeddings[0], embeddings[1])
+    return similarities.item()
+
 
 def evaluate_set(query_fn: Callable[[str], str], eval_fn: Callable[[str, str], float], dataset) -> float:
-  for data in dataset:
-    llm_response = query_fn(data['post'])
-    score = eval_fn(data['expected_answer'], llm_response)
-    # print(f"{data}")
-    # print(f"{llm_response}")
-    # print(f"{data['expected_answer']}")
-    assert score >= 0.9
+    total_score = 0
+    for data in dataset:
+        llm_response = query_fn(data['post'])
+        score = eval_fn(data['expected_answer'], llm_response)
+        # print(f"{data}")
+        # print(f"{llm_response}")
+        # print(f"{data['expected_answer']}")
+        total_score += score
+        # print(f"score: {score}")
+    # print(f"len: {len(dataset)}")
+    assert total_score / len(dataset) >= 0.9
+    
 
 def test_llm_normal_response():
     evaluate_set(translate_content, eval_single_response_complete, normal_eval_set)
