@@ -1,13 +1,7 @@
 import openai
 import os
-from sentence_transformers import SentenceTransformer, util
-model = SentenceTransformer('all-MiniLM-L6-v2')
 
-OPENAI_API_KEY = os.environ.get("${{ secrets.OPENAI_API_KEY }}")
-
-client = openai.OpenAI(
-    api_key = OPENAI_API_KEY
-)
+client = openai.OpenAI()
 
 def get_translation(post: str) -> str:
     response = client.chat.completions.create(
