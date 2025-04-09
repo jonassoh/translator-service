@@ -1,6 +1,7 @@
 #add these to requirements or install
 #pytest-mock
 #mock
+#sentence-transformers
 
 import openai
 import os
