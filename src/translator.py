@@ -34,9 +34,10 @@
 #     return False, "Not hardcoded"
 import openai
 import os
-# os.environ["OPENAI_API_KEY"] = "${{ secrets.OPENAI_API_KEY }}"
 
-client = openai.OpenAI(api_key = "${{ secrets.OPENAI_API_KEY }}")
+os.environ["OPENAI_API_KEY"] = "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"
+
+client = openai.OpenAI()
 
 def get_translation(post: str) -> str:
     response = client.chat.completions.create(
