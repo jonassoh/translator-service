@@ -1,3 +1,8 @@
+#add these to requirements or install
+#pytest-mock
+#mock
+
+
 import openai
 import os
 import anthropic
