@@ -35,9 +35,9 @@
 import openai
 import os
 
-os.environ["OPENAI_API_KEY"] = "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"
+api_key = os.environ.get("OPENAI_API_KEY")
 
-client = openai.OpenAI()
+client = openai.OpenAI(api_key=api_key)
 
 def get_translation(post: str) -> str:
     response = client.chat.completions.create(
